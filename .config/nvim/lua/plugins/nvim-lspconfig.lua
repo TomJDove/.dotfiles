@@ -7,6 +7,18 @@ return {
 
 			lsp_config.rust_analyzer.setup({})
 
+			lsp_config.bashls.setup({})
+
+			lsp_config.lua_ls.setup({
+				settings = {
+					Lua = {
+						diagnostics = {
+							globals = { "vim" },
+						},
+					},
+				},
+			})
+
 			-- Type script language server and linter
 			lsp_config.ts_ls.setup({})
 			--
@@ -24,6 +36,7 @@ return {
 			})
 
 			lsp_config.basedpyright.setup({
+				capabilities = capabilities,
 				settings = {
 					basedpyright = {
 						-- Using Ruff's import organizer
@@ -31,9 +44,8 @@ return {
 					},
 					python = {
 						analysis = {
-							-- Ignore all files for analysis to exclusively use Ruff for linting
-							typeCheckingMode = "off",
-							ignore = { "*" },
+							-- Enable analysis for refactoring support, while Ruff handles linting
+							typeCheckingMode = "basic",
 						},
 					},
 				},
@@ -59,6 +71,7 @@ return {
 
 			-- LSP key bindings
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition)
+			vim.keymap.set({ "n", "v" }, "<leader>ca", vim.lsp.buf.code_action, { desc = "Code actions" })
 
 			-- Diagnostic key bindings
 			vim.keymap.set("n", "K", vim.lsp.buf.hover, {})

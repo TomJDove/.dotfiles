@@ -1,7 +1,7 @@
 # vim:fileencoding=utf-8:foldmethod=marker
 
 # BEGIN_KITTY_THEME
-# Catppuccin-Mocha
+# Everforest Light Medium
 include current-theme.conf
 # END_KITTY_THEME
 
@@ -2719,7 +2719,7 @@ include current-theme.conf
 
 
 # BEGIN_KITTY_FONTS
-font_family      family="MesloLGL Nerd Font"
+font_family      family='Monaspace Neon NF' features='+ss01 +ss02 +ss03 +ss04 +ss05 +ss06 +ss07 +ss08 +ss09 +ss10 -subs -sups +liga +calt'
 bold_font        auto
 italic_font      auto
 bold_italic_font auto
@@ -2732,7 +2732,9 @@ window_padding_width 2
 window_border_width 0
 hide_window_decorations yes
 titlebar-only yes
-active_border_color none
+modify_font cell_height 120%
+
+# active_border_color none
 
 
 

@@ -16,3 +16,5 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.api.nvim_set_option("clipboard", "unnamed")
 
 vim.opt.rtp:append(vim.fn.stdpath("config") .. "/lua/custom/")
+
+require("config.run-configs.run-commands").setup()
