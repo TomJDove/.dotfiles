@@ -3,13 +3,15 @@ return {
 		"neovim/nvim-lspconfig",
 		config = function()
 			local capabilities = require("blink.cmp").get_lsp_capabilities()
-			local lsp_config = require("lspconfig")
 
-			lsp_config.rust_analyzer.setup({})
+			vim.lsp.config("rust_analyzer", { capabilities = capabilities })
+			vim.lsp.enable("rust_analyzer")
 
-			lsp_config.bashls.setup({})
+			vim.lsp.config("bashls", { capabilities = capabilities })
+			vim.lsp.enable("bashls")
 
-			lsp_config.lua_ls.setup({
+			vim.lsp.config("lua_ls", {
+				capabilities = capabilities,
 				settings = {
 					Lua = {
 						diagnostics = {
@@ -18,16 +20,18 @@ return {
 					},
 				},
 			})
+			vim.lsp.enable("lua_ls")
 
 			-- Type script language server and linter
-			lsp_config.ts_ls.setup({})
-			--
-			-- lsp_config.harper_ls.setup({
-			-- 	settings = {
-			-- 		dialect = "Australian",
-			-- 	},
-			-- })
-			--
+			vim.lsp.config("ts_ls", {})
+			vim.lsp.enable("ts_ls")
+
+			-- HTML
+			vim.lsp.config("superhtml", {
+				capabilities = capabilities,
+			})
+			vim.lsp.enable("superhtml")
+
 			vim.diagnostic.config({
 				underline = false, -- disables underlining entirely
 				virtual_text = false, -- still show messages inline
@@ -35,7 +39,8 @@ return {
 				update_in_insert = false,
 			})
 
-			lsp_config.basedpyright.setup({
+			-- Enable basedpyright
+			vim.lsp.config("basedpyright", {
 				capabilities = capabilities,
 				settings = {
 					basedpyright = {
@@ -50,24 +55,53 @@ return {
 					},
 				},
 			})
+			vim.lsp.enable("basedpyright")
 
-			lsp_config.ruff.setup({ capabilities = capabilities })
+			-- Enable ruff
+			vim.lsp.config("ruff", {
+				capabilities = capabilities,
+			})
+			vim.lsp.enable("ruff")
 
-			-- Disable hover for Ruff
+			-- Configure LSP capabilities for Python: ty for everything, BasedPyRight only for renaming
 			vim.api.nvim_create_autocmd("LspAttach", {
-				group = vim.api.nvim_create_augroup("lsp_attach_disable_ruff_hover", { clear = true }),
+				group = vim.api.nvim_create_augroup("lsp_attach_python_capabilities", { clear = true }),
 				callback = function(args)
 					local client = vim.lsp.get_client_by_id(args.data.client_id)
 					if client == nil then
 						return
 					end
 					if client.name == "ruff" then
-						-- Disable hover in favor of Pyright
+						-- Disable hover in favor of ty
 						client.server_capabilities.hoverProvider = false
+					elseif client.name == "basedpyright" then
+						-- Disable everything except renaming - let ty handle the rest
+						client.server_capabilities.hoverProvider = false
+						client.server_capabilities.definitionProvider = false
+						client.server_capabilities.referencesProvider = false
+						client.server_capabilities.documentSymbolProvider = false
+						client.server_capabilities.workspaceSymbolProvider = false
+						client.server_capabilities.implementationProvider = false
+						client.server_capabilities.typeDefinitionProvider = false
+						client.server_capabilities.codeActionProvider = false
+						client.server_capabilities.completionProvider = false
+						client.server_capabilities.signatureHelpProvider = false
+						-- Keep only renameProvider enabled
 					end
 				end,
-				desc = "LSP: Disable hover capability from Ruff",
+				desc = "LSP: Configure Python LSP capabilities",
 			})
+
+			-- Enable ty
+			vim.lsp.config("ty", {
+				capabilities = capabilities,
+				settings = {
+					ty = {
+						-- ty language server settings go here
+					},
+				},
+			})
+			vim.lsp.enable("ty")
 
 			-- LSP key bindings
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition)

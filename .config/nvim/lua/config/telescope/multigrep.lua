@@ -8,8 +8,11 @@ local M = {}
 local live_multigrep = function(opts)
 	opts = opts or {}
 	opts.cwd = opts.cwd or vim.uv.cwd()
+	local case_mode = opts.case_sensitive and "--case-sensitive" or "--smart-case"
 
-	finder = finders.new_async_job({
+	print(case_mode)
+
+	local finder = finders.new_async_job({
 		command_generator = function(prompt)
 			if not prompt or prompt == "" then
 				return nil
@@ -29,7 +32,7 @@ local live_multigrep = function(opts)
 
 			return vim.tbl_flatten({
 				args,
-				{ "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", "--smart-case" },
+				{ "--color=never", "--no-heading", "--with-filename", "--line-number", "--column", case_mode },
 			})
 		end,
 		entry_maker = make_entry.gen_from_vimgrep(opts),
@@ -39,7 +42,7 @@ local live_multigrep = function(opts)
 	pickers
 		.new(opts, {
 			debounce = 100,
-			prompt_title = "Multi Grep",
+			prompt_title = opts.case_sensitive and "Multi Grep (Case Sensitive)" or "Multi Grep",
 			finder = finder,
 			previewer = conf.grep_previewer(opts),
 			sorter = require("telescope.sorters").empty(),
@@ -49,6 +52,9 @@ end
 
 M.setup = function()
 	vim.keymap.set("n", "<leader>fg", live_multigrep, { desc = "Multigrep" })
+	vim.keymap.set("n", "<leader>fG", function()
+		live_multigrep({ case_sensitive = true })
+	end, { desc = "Multigrep (case insensitive)" })
 end
 
 return M

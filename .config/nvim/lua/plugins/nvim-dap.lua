@@ -22,6 +22,44 @@ return {
 				config.justMyCode = false
 			end
 
+			-- Rust configuration using codelldb
+			dap.adapters.codelldb = {
+				type = "server",
+				port = "${port}",
+				executable = {
+					command = vim.fn.exepath("codelldb"),
+					args = { "--port", "${port}" },
+				},
+			}
+
+			dap.configurations.rust = {
+				{
+					name = "Launch",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = {},
+				},
+				{
+					name = "Launch with arguments",
+					type = "codelldb",
+					request = "launch",
+					program = function()
+						return vim.fn.input("Path to executable: ", vim.fn.getcwd() .. "/target/debug/", "file")
+					end,
+					cwd = "${workspaceFolder}",
+					stopOnEntry = false,
+					args = function()
+						local args_string = vim.fn.input("Arguments: ")
+						return vim.split(args_string, " ")
+					end,
+				},
+			}
+
 			require("nvim-dap-virtual-text").setup({
 				display_callback = function(variable)
 					local name = string.lower(variable.name)
@@ -44,7 +82,7 @@ return {
 
 			-- Test current method with pytest
 			vim.keymap.set("n", "<leader>tm", function()
-				require("dap-python").test_method()
+				require("dap-python").test_method({ justMyCode = false })
 			end)
 
 			vim.keymap.set("n", "<F9>", dap.continue)
@@ -53,6 +91,14 @@ return {
 			vim.keymap.set("n", "<S-F8>", dap.step_out)
 			vim.keymap.set("n", "<F10>", dap.restart)
 			vim.keymap.set("n", "<F12>", dap.terminate)
+
+			-- Move up and down the stack
+			vim.keymap.set("n", "<C-S-j>", function()
+				require("dap").down()
+			end)
+			vim.keymap.set("n", "<C-S-k>", function()
+				require("dap").up()
+			end)
 
 			dap.listeners.before.attach.dapui_config = function()
 				ui.open()
