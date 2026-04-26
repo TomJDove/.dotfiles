@@ -11,10 +11,8 @@ vim.keymap.set("v", "<space>x", ":lua<CR>", { desc = "Run Lua (selection)" })
 
 vim.keymap.set("n", "<leader>D", "<CMD> NoiceDismiss <CR>", { desc = "Dismiss notification" })
 
-vim.keymap.set("n", "<C-h>", "<C-w>h", { noremap = true })
-vim.keymap.set("n", "<C-j>", "<C-w>j", { noremap = true })
-vim.keymap.set("n", "<C-k>", "<C-w>k", { noremap = true })
-vim.keymap.set("n", "<C-l>", "<C-w>l", { noremap = true })
+-- Navigation keymaps removed - handled by smart-splits plugin
+-- (See .config/nvim/lua/plugins/nvim-tmux-navigator.lua)
 
 -- Tmux sessionizer
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>", { noremap = true, silent = true })
@@ -34,3 +32,9 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 		vim.keymap.set("n", "<CR>", "<CR>", { buffer = true })
 	end,
 })
+
+-- Close quickfix window
+vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix" })
+
+-- Close the quickfix window and toggle zen mode
+vim.keymap.set("n", "<leader>cz", "<cmd>cclose<CR><cmd>ZenMode<CR>", { desc = "Close quickfix and toggle zen mode" })

@@ -1,12 +1,14 @@
 return {
 	{
-		'saghen/blink.cmp', 
-		dependencies = { 'rafamadriz/friendly-snippets' },
-
-		-- use a release tag to download pre-built binaries
-		version = '1.*',
-
+		"saghen/blink.cmp",
+		dependencies = {
+			"rafamadriz/friendly-snippets",
+		},
+		version = "1.*",
 		opts = {
+			sources = {
+				default = { "lsp", "path", "snippets", "buffer" },
+			},
 			-- 'default' (recommended) for mappings similar to built-in completions (C-y to accept)
 			-- 'super-tab' for mappings similar to vscode (tab to accept)
 			-- 'enter' for enter to accept
@@ -19,12 +21,12 @@ return {
 			-- C-k: Toggle signature help (if signature.enabled = true)
 			--
 			-- See :h blink-cmp-config-keymap for defining your own keymap
-			keymap = { preset = 'default' },
+			keymap = { preset = "default" },
 
 			appearance = {
 				-- 'mono' (default) for 'Nerd Font Mono' or 'normal' for 'Nerd Font'
 				-- Adjusts spacing to ensure icons are aligned
-				nerd_font_variant = 'mono'
+				nerd_font_variant = "mono",
 			},
 
 			-- (Default) Rust fuzzy matcher for typo resistance and significantly better performance
@@ -34,9 +36,8 @@ return {
 			-- See the fuzzy documentation for more information
 			fuzzy = { implementation = "prefer_rust_with_warning" },
 
-			signature = { enabled = true }
+			signature = { enabled = true },
 		},
-		opts_extend = { "sources.default" }
-	}
-
+		opts_extend = { "sources.default" },
+	},
 }

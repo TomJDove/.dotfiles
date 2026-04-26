@@ -75,7 +75,7 @@ return {
 						-- Disable hover in favor of ty
 						client.server_capabilities.hoverProvider = false
 					elseif client.name == "basedpyright" then
-						-- Disable everything except renaming - let ty handle the rest
+						-- Disable everything - let ty handle everything including renaming
 						client.server_capabilities.hoverProvider = false
 						client.server_capabilities.definitionProvider = false
 						client.server_capabilities.referencesProvider = false
@@ -86,7 +86,7 @@ return {
 						client.server_capabilities.codeActionProvider = false
 						client.server_capabilities.completionProvider = false
 						client.server_capabilities.signatureHelpProvider = false
-						-- Keep only renameProvider enabled
+						client.server_capabilities.renameProvider = false
 					end
 				end,
 				desc = "LSP: Configure Python LSP capabilities",
