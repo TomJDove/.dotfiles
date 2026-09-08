@@ -13,7 +13,47 @@ return {
 			local dap = require("dap")
 			local ui = require("dapui")
 
-			require("dapui").setup()
+			require("dapui").setup({
+				layouts = {
+					-- Layout 1: REPL on right only
+					{
+						elements = {
+							{ id = "repl", size = 1.0 },
+						},
+						size = 0.40,
+						position = "right",
+					},
+					-- Layout 2: BP on left, REPL on bottom
+					{
+						elements = {
+							{ id = "breakpoints", size = 1.0 },
+						},
+						size = 0.15,
+						position = "left",
+					},
+					{
+						elements = {
+							{ id = "repl", size = 1.0 },
+						},
+						size = 0.30,
+						position = "bottom",
+					},
+				},
+			})
+
+			-- Toggle between layouts
+			local current_layout = 1
+			vim.keymap.set("n", "<leader>ds", function()
+				ui.close()
+				if current_layout == 1 then
+					ui.open({ layout = 2 })
+					ui.open({ layout = 3 })
+					current_layout = 2
+				else
+					ui.open({ layout = 1 })
+					current_layout = 1
+				end
+			end, { desc = "DAP switch layout" })
 
 			require("dap-python").setup("uv")
 
@@ -101,10 +141,10 @@ return {
 			end)
 
 			dap.listeners.before.attach.dapui_config = function()
-				ui.open()
+				ui.open({ layout = 1 })
 			end
 			dap.listeners.before.launch.dapui_config = function()
-				ui.open()
+				ui.open({ layout = 1 })
 			end
 			dap.listeners.before.event_terminated.dapui_config = function()
 				ui.close()

@@ -2787,6 +2787,3 @@ map kitty_mod+t combine : new_tab : set_tab_title " "
 
 # Used to zoom into the current window and back
 map kitty_mod+z toggle_layout stack
-
-# Toggle focus mode: centre the text of the current window at 120 columns.
-map f11 kitten focus_mode.py 120

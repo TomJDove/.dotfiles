@@ -15,7 +15,7 @@ alias sp='kitten icat'
 alias td='traverse-directories'
 alias tma='tmux attach -t'
 alias tms='tmux-sessionizer'
-alias uvrt='uv run pytest'
+alias uvrt='uv run pytest --show-capture=no --disable-warnings'
 alias stt='kitty @ set-tab-title'
 
 # Create directory and cd into it
@@ -155,6 +155,12 @@ custom_geospatial_query_one_liner() {
 }
 alias cgq=custom_geospatial_query_one_liner  
 
+run_sqlit() {
+    setup_geospatial_db "$@"
+    sqlit
+}
+alias rsqlit=run_sqlit
+
 
 # https://unix.stackexchange.com/questions/85391/where-is-the-bash-feature-to-open-a-command-in-editor-documented
 _edit_wo_executing() {
@@ -169,3 +175,19 @@ _edit_wo_executing() {
 
 set -o vi
 bind -x '"\C-x\C-e":_edit_wo_executing'
+
+feature_count() {
+    layer="$1"
+    ogrinfo -al -so "$layer" | grep "Count"
+}
+alias fc=feature_count
+
+dots=".."
+target="cd .."
+for((i=0; i<10; i++))
+do
+    alias "$dots=$target"
+    dots+="."
+    target+="/.."
+done
+unset dots target

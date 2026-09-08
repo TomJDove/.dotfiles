@@ -38,3 +38,11 @@ vim.keymap.set("n", "<leader>cc", "<cmd>cclose<CR>", { desc = "Close quickfix" }
 
 -- Close the quickfix window and toggle zen mode
 vim.keymap.set("n", "<leader>cz", "<cmd>cclose<CR><cmd>ZenMode<CR>", { desc = "Close quickfix and toggle zen mode" })
+
+-- Use :W as :noau w
+vim.api.nvim_create_user_command("W", "noautocmd w <args>", { nargs = "*" })
+
+-- Toggle render markdown
+vim.keymap.set("n", "<leader>mt", "<cmd>RenderMarkdown toggle<CR>", { desc = "Toggle markdown rendering" })
+
+require("config.markdown-folding")
